@@ -46,7 +46,8 @@ const drawBuildings = (buildings) => {
     .attr("y", b => y(b.height))
     .attr("x", b => x(b.name))
     .attr("width", x.bandwidth)
-    .attr("height", b => y(0) - y(b.height));
+    .attr("height", b => y(0) - y(b.height))
+    .attr("fill", "grey");
 
   const yAxis = d3.axisLeft(y).tickFormat(d => d + "m").ticks(3);
   const xAxis = d3.axisBottom(x);

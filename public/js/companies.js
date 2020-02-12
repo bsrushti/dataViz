@@ -16,6 +16,16 @@ const drawCompanies = (companies) => {
     .domain(_.map(companies, "Name"))
     .padding(0.3);
 
+  const colorScale = d3.scaleOrdinal([
+    DARK_BLUE,
+    DULL_BLUE,
+    BRIGHT_BLUE,
+    LIGHT_BLUE,
+    BABY_BLUE,
+    PALE_BLUE,
+    BLUE_JEANS
+  ]);
+
   const svg = d3.select("#chart-container")
     .append("svg")
     .attr("width", chartSize.width)
@@ -45,7 +55,8 @@ const drawCompanies = (companies) => {
     .attr("y", c => y(c.CMP))
     .attr("x", c => x(c.Name))
     .attr("width", x.bandwidth)
-    .attr("height", c => y(0) - y(c.CMP));
+    .attr("height", c => y(0) - y(c.CMP))
+    .attr("fill", c => colorScale(c.Name));
 
   const yAxis = d3.axisLeft(y).tickFormat(c => c + "₹").ticks(6);
   const xAxis = d3.axisBottom(x);
@@ -61,13 +72,14 @@ const drawCompanies = (companies) => {
 
   g.selectAll(".x-axis text")
     .attr("transform", "rotate(-40)")
-    .attr("x", - 5)
+    .attr("x", -5)
     .attr("y", 10)
 
 };
 
 const main = () => {
-  d3.csv('data/companies.csv', c => {return {...c, CMP : +c.CMP}
+  d3.csv('data/companies.csv', c => {
+    return {...c, CMP: +c.CMP}
   }).then(drawCompanies);
 };
 
