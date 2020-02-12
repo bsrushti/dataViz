@@ -1,20 +1,19 @@
-const drawBuildings = (buildings) => {
-  const toLine = b => `<strong>${b.name}</strong> <i>${b.height}</i>`;
-  document.querySelector('#chart-area').innerHTML = buildings.map(toLine).join('<hr/>');
+const drawCompanies = (companies) => {
+  console.log(companies);
 
-  const chartSize = {width: 600, height: 400};
+  const chartSize = {width: 800, height: 600};
   const margin = {left: 100, right: 10, top: 30, bottom: 150};
 
   const width = chartSize.width - margin.left - margin.right;
   const height = chartSize.height - margin.top - margin.bottom;
 
   const y = d3.scaleLinear()
-    .domain([0, (_.maxBy(buildings, "height").height)])
+    .domain([0, (_.maxBy(companies, "CMP").CMP)])
     .range([height, 0]);
 
   const x = d3.scaleBand()
     .range([0, width])
-    .domain(_.map(buildings, "name"))
+    .domain(_.map(companies, "Name"))
     .padding(0.3);
 
   const svg = d3.select("#chart-container")
@@ -29,26 +28,26 @@ const drawBuildings = (buildings) => {
     .attr("class", "axis-label")
     .attr("x", width / 2)
     .attr("y", height + 140)
-    .text("Tall Buildings");
+    .text("CMP Names");
 
   g.append("text")
     .attr("class", "axis-label")
     .attr("x", -height / 2)
     .attr("y", -60)
     .attr("transform", "rotate(-90)")
-    .text("Height(m)");
+    .text("CMP₹");
 
   const rectangles = g.selectAll("rect")
-    .data(buildings);
+    .data(companies);
 
   const newRects = rectangles.enter()
     .append("rect")
-    .attr("y", b => y(b.height))
-    .attr("x", b => x(b.name))
+    .attr("y", c => y(c.CMP))
+    .attr("x", c => x(c.Name))
     .attr("width", x.bandwidth)
-    .attr("height", b => y(0) - y(b.height));
+    .attr("height", c => y(0) - y(c.CMP));
 
-  const yAxis = d3.axisLeft(y).tickFormat(d => d + "m").ticks(3);
+  const yAxis = d3.axisLeft(y).tickFormat(c => c + "₹").ticks(6);
   const xAxis = d3.axisBottom(x);
 
   g.append("g")
@@ -68,7 +67,8 @@ const drawBuildings = (buildings) => {
 };
 
 const main = () => {
-  d3.json('data/buildings.json').then(drawBuildings);
+  d3.csv('data/companies.csv', c => {return {...c, CMP : +c.CMP}
+  }).then(drawCompanies);
 };
 
 window.onload = main;
