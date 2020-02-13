@@ -1,14 +1,25 @@
-const drawCompanies = (companies) => {
-  console.log(companies);
+const chartSize = {width: 800, height: 600};
+const margin = {left: 100, right: 10, top: 30, bottom: 150};
 
-  const chartSize = {width: 800, height: 600};
-  const margin = {left: 100, right: 10, top: 30, bottom: 150};
+const width = chartSize.width - margin.left - margin.right;
+const height = chartSize.height - margin.top - margin.bottom;
 
-  const width = chartSize.width - margin.left - margin.right;
-  const height = chartSize.height - margin.top - margin.bottom;
+const formats = {
+  Rs:d=>`${d} ₹`,
+  kCrRs:d=>`${d/1000}k Cr ₹`,
+  PE:d=>d
+};
+
+const fieldNameFormat = {
+  CMP : formats.Rs,
+  MarketCap: formats.kCrRs,
+  PE: formats.PE
+};
+
+const drawCompanies = (companies, fieldName) => {
 
   const y = d3.scaleLinear()
-    .domain([0, (_.maxBy(companies, "CMP").CMP)])
+    .domain([0, (_.maxBy(companies, fieldName)[fieldName])])
     .range([height, 0]);
 
   const x = d3.scaleBand()
@@ -26,8 +37,7 @@ const drawCompanies = (companies) => {
     BLUE_JEANS
   ]);
 
-  const svg = d3.select("#chart-container")
-    .append("svg")
+  const svg = d3.select("#chart-container svg")
     .attr("width", chartSize.width)
     .attr("height", chartSize.height);
 
@@ -41,21 +51,21 @@ const drawCompanies = (companies) => {
     .text("CMP Names");
 
   g.append("text")
-    .attr("class", "axis-label")
+    .attr("class", "y axis-label")
     .attr("x", -height / 2)
     .attr("y", -60)
     .attr("transform", "rotate(-90)")
-    .text("CMP₹");
+    .text(fieldName);
 
   const rectangles = g.selectAll("rect")
     .data(companies);
 
   const newRects = rectangles.enter()
     .append("rect")
-    .attr("y", c => y(c.CMP))
+    .attr("y", c => y(c[fieldName]))
     .attr("x", c => x(c.Name))
     .attr("width", x.bandwidth)
-    .attr("height", c => y(0) - y(c.CMP))
+    .attr("height", c => y(0) - y(c[fieldName]))
     .attr("fill", c => colorScale(c.Name));
 
   const yAxis = d3.axisLeft(y).tickFormat(c => c + "₹").ticks(6);
@@ -73,14 +83,53 @@ const drawCompanies = (companies) => {
   g.selectAll(".x-axis text")
     .attr("transform", "rotate(-40)")
     .attr("x", -5)
-    .attr("y", 10)
+    .attr("y", 10);
+};
 
+const updateCompanies = (companies, fieldName) => {
+  const y = d3.scaleLinear()
+    .domain([0, (_.maxBy(companies, fieldName)[fieldName])])
+    .range([height, 0]);
+
+  const svg = d3.select('#chart-container svg');
+
+  svg.select('.y.axis-label')
+    .text(fieldName);
+
+  const yAxis = d3
+    .axisLeft(y)
+    .tickFormat(fieldNameFormat[fieldName])
+    .ticks(12);
+
+  svg.select('.y-axis')
+    .call(yAxis);
+
+  svg.selectAll('rect')
+    .data(companies)
+    .transition()
+    .duration(500)
+    .ease(d3.easeLinear)
+    .attr("y", c => y(c[fieldName]))
+    .attr('height', c => y(0) - y(c[fieldName]));
 };
 
 const main = () => {
   d3.csv('data/companies.csv', c => {
-    return {...c, CMP: +c.CMP}
-  }).then(drawCompanies);
+    return {
+      ...c,
+      CMP: +c.CMP,
+      PE: +c.PE,
+      MarketCap: +c.MarketCap
+    }
+  }).then(c => {
+    const fieldNames = ["CMP", "PE", "MarketCap"];
+    let index = 0;
+    drawCompanies(c, fieldNames[index]);
+    setInterval(() => {
+      index = ++index % fieldNames.length;
+      updateCompanies(c, fieldNames[index]);
+    }, 2000);
+  });
 };
 
 window.onload = main;
