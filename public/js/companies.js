@@ -26,8 +26,7 @@ const fieldNameFormat = {
   PE: formats.PE
 };
 
-const drawCompanies = (companies, fieldName) => {
-
+const initCompanies = (companies, fieldName) => {
   const y = d3.scaleLinear()
     .domain([0, (_.maxBy(companies, fieldName)[fieldName])])
     .range([height, 0]);
@@ -141,7 +140,7 @@ const main = () => {
   }).then(c => {
     const fieldNames = ["CMP", "PE", "MarketCap"];
     let index = 0;
-    drawCompanies(c, fieldNames[index]);
+    initCompanies(c, fieldNames[index]);
     setInterval(() => {
       index = ++index % fieldNames.length;
       updateCompanies(c, fieldNames[index]);
