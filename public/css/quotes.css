@@ -1,0 +1,9 @@
+svg {
+  border: 1px solid grey;
+}
+
+.close {
+  stroke : steelblue;
+  stroke-width: 3px;
+  fill: none;
+}
