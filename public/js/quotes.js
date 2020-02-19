@@ -1,4 +1,4 @@
-const chartSize = {width: 800, height: 600};
+const chartSize = {width: 1200, height: 700};
 const margin = {left: 100, right: 10, top: 30, bottom: 150};
 
 const width = chartSize.width - margin.left - margin.right;
@@ -43,8 +43,8 @@ const updatePrices = (quotes) => {
   const svg = d3.select('#chart-container svg');
   const g = svg.select('g');
 
-  const minDate = _.first(quotes).Date;
-  const maxDate = _.last(quotes).Date;
+  const minDate = _.first(quotes).Time;
+  const maxDate = _.last(quotes).Time;
 
   const y = d3.scaleLinear()
     .domain([(_.minBy(quotes, "Close").Close),
@@ -57,7 +57,7 @@ const updatePrices = (quotes) => {
 
   const x = d3.scaleTime()
     .range([0, width])
-    .domain([new Date(minDate), new Date(maxDate)]);
+    .domain([new Date(minDate), maxDate]);
 
   const xAxis = d3.axisBottom(x);
   svg.select(".x-axis").call(xAxis);
@@ -66,21 +66,44 @@ const updatePrices = (quotes) => {
     .text("Close");
 
   const line = d3.line()
-    .x(q => x(new Date(q.Date)))
+    .x(q => x(q.Time))
     .y(q => y(q.Close));
+
+  const SMALine = d3.line()
+    .x(q => x(q.Time))
+    .y(q => y(q.SMA));
 
   g.append("path")
     .attr("class", "close")
     .attr('d', line(quotes));
 
+  g.append("path")
+    .attr("class", "avg")
+    .attr('d', SMALine(quotes.slice(100)));
+
 };
+
+const SMA = (quotes, index) => {
+  const hundredQuotes = _.takeRight(_.take(quotes, index), 100);
+  const closePrices = _.map(hundredQuotes, "Close");
+  return closePrices.reduce((a, b) => a + b, 0) / 100;
+};
+
+const analyseData = (quotes) => {
+  for (let i = 100; i < quotes.length; i++) {
+    quotes[i].SMA = SMA(quotes, i);
+  }
+};
+
 const main = () => {
-  d3.csv('data/nifty50.csv', e => {
+  d3.csv('data/nifty50.csv', q => {
     return {
-      ...e,
-      Close: +e.Close,
+      ...q,
+      Close: +q.Close,
+      Time: new Date(q.Date)
     }
   }).then(quotes => {
+    analyseData(quotes);
     initChart();
     updatePrices(quotes);
   });

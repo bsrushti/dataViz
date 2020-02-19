@@ -3,7 +3,13 @@ svg {
 }
 
 .close {
-  stroke : steelblue;
+  stroke : black;
+  stroke-width: 3px;
+  fill: none;
+}
+
+.avg {
+  stroke : blue;
   stroke-width: 3px;
   fill: none;
 }
