@@ -8,6 +8,9 @@
     <title>Nifty 50</title>
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/quotes.css">
+    <script src="https://cdn.rawgit.com/RasmusFonseca/d3RangeSlider/master/d3RangeSlider.js"></script>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <link href="https://cdn.rawgit.com/RasmusFonseca/d3RangeSlider/master/d3RangeSlider.css" rel="stylesheet">
 </head>
 
 <body>
@@ -19,6 +22,8 @@
 <div class="container">
     <div class="row">
         <div id="chart-container" class="col-sm">
+            <div id="date-range" class="d-flex justify-content-center"></div>
+            <div id="slider-container"></div>
             <svg></svg>
         </div>
     </div>

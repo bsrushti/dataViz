@@ -13,3 +13,14 @@ svg {
   stroke-width: 3px;
   fill: none;
 }
+
+#date-range {
+  height:30px;
+  align-self: center;
+}
+
+#slider-container {
+  margin-top: 10px;
+  height:30px;
+}
+
