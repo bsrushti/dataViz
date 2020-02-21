@@ -6,8 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Nifty 50</title>
+
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/quotes.css">
+
     <script src="https://cdn.rawgit.com/RasmusFonseca/d3RangeSlider/master/d3RangeSlider.js"></script>
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <link href="https://cdn.rawgit.com/RasmusFonseca/d3RangeSlider/master/d3RangeSlider.css" rel="stylesheet">
@@ -21,11 +23,19 @@
 
 <div class="container">
     <div class="row">
+        <div>
+            <span>SMA period</span>
+            <input id="sma-period" type="number" value="100"/>
+            <span>SMA offset</span>
+            <input id="sma-offset" type="number"/>
+        </div>
         <div id="chart-container" class="col-sm">
             <div id="date-range" class="d-flex justify-content-center"></div>
             <div id="slider-container"></div>
             <svg></svg>
         </div>
+        <div id="transaction-table"></div>
+        <div id="statistics-table"></div>
     </div>
 </div>
 </body>

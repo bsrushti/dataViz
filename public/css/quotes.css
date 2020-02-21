@@ -1,15 +1,30 @@
+body {
+  background-color: #5D6D7E;
+  color: white;
+}
+
 svg {
   border: 1px solid grey;
 }
 
+input {
+  margin: auto;
+}
+
+.axis-label {
+  fill:rgba(6, 255, 230, 0.817);
+  font-weight: bolder;
+  font-size: 20px;
+}
+
 .close {
-  stroke : black;
+  stroke : #faffff;
   stroke-width: 3px;
   fill: none;
 }
 
 .avg {
-  stroke : blue;
+  stroke : #6dff0e;
   stroke-width: 3px;
   fill: none;
 }
@@ -22,5 +37,30 @@ svg {
 #slider-container {
   margin-top: 10px;
   height:30px;
+}
+
+#statistics-table {
+  padding: 10px 15px;
+  margin-left: 10%;
+}
+
+table, tr, td {
+  text-align: right;
+  border: 1px solid white;
+  color: white;
+}
+
+table {
+  margin-top: 3%;
+}
+
+th {
+  border: 1px solid white;
+}
+
+th {
+  background-color: #4e555b;
+  color: white;
+  text-align: center;
 }
 
