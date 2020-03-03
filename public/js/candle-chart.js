@@ -65,6 +65,11 @@ const drawCandleChart = (quotes) => {
   svg.select(".x-axis").call(xAxis);
   svg.select(".y-axis").call(yAxis);
 
+  g.selectAll(".x-axis text")
+      .attr("transform", "rotate(-90)")
+      .attr("x", -30)
+      .attr("y", -4);
+
   const line = candleG.selectAll("g")
     .data(quotes);
 
@@ -101,7 +106,7 @@ const main = () => {
     }
   }).then(quotes => {
     initChart();
-    drawCandleChart(_.take(quotes, 20));
+    drawCandleChart(_.take(quotes, 50));
   });
 };
 
