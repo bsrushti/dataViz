@@ -109,6 +109,7 @@ const drawSlider = (quotes) => {
 const updateSMAPeriod = (quotes) => {
   d3.select("#sma-period").on("input", function () {
     analyseData(quotes, +this.value);
+    recordTransaction(quotes, +this.value);
   });
 };
 
@@ -138,11 +139,8 @@ const recordTransaction = (quotes, period = 100) => {
       boughtStocks = quotes[i];
     }
 
-    if (Close < SMA && stockBought) {
+    if ((Close < SMA || i === quotes.length - 1) && stockBought) {
       stockBought = false;
-      transactions.push({buy: boughtStocks, sell: quotes[i]});
-    }
-    if (i === quotes.length - 1 && stockBought) {
       transactions.push({buy: boughtStocks, sell: quotes[i]});
     }
   }
@@ -230,7 +228,7 @@ const drawStatisticsTable = (transactions) => {
       variable: 'win %', 'win %': _.round((totalWins.length / transactions.length) * 100, 2)
     },
     {
-      variable: 'loss-multiple', 'loss-multiple': _.round(totalLosses.length / totalWins.length,2)
+      variable: 'loss-multiple', 'loss-multiple': _.round(totalLosses.length / totalWins.length, 2)
     },
     {
       variable: 'profit-avg', 'profit-avg': Math.round(totalProfitAvg)
@@ -239,13 +237,13 @@ const drawStatisticsTable = (transactions) => {
       variable: 'loss-avg', 'loss-avg': Math.abs(Math.round(totalLossAvg))
     },
     {
-      variable: 'win-multiple', 'win-multiple':Math.abs(_.round((totalProfitAvg / totalLossAvg),2))
+      variable: 'win-multiple', 'win-multiple': Math.abs(_.round((totalProfitAvg / totalLossAvg), 2))
     },
     {
       variable: 'total net profit', 'total net profit': Math.round(totalNetProfit)
     },
     {
-      variable: 'expectancy', 'expectancy': Math.round(totalProfit / transactions.length)
+      variable: 'expectancy', 'expectancy': Math.round(totalNetProfit / transactions.length)
     },
   ];
 
@@ -265,7 +263,7 @@ const drawStatisticsTable = (transactions) => {
       return d;
     });
 
-  rows.selectAll('td')
+  const cells = rows.selectAll('td')
     .data(function (row) {
       return [{column: row.variable, value: row[row.variable]}];
     })
@@ -274,7 +272,7 @@ const drawStatisticsTable = (transactions) => {
     .text(function (d) {
       return d.value
     });
-  return table;
+
 };
 
 const main = () => {

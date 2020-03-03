@@ -1,0 +1,20 @@
+svg {
+  border: 1px solid grey;
+}
+
+line {
+  stroke-width: 1px;
+  stroke: black;
+}
+
+.tick line {
+  stroke: lightgray;
+}
+
+.negative {
+  fill: red;
+}
+
+.positive {
+  fill: green;
+}
