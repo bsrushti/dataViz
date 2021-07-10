@@ -36,7 +36,6 @@ const initChart = () => {
 
 };
 
-
 const drawCandleChart = (quotes) => {
   const svg = d3.select('#candle-chart svg');
   const g = svg.select('g');
@@ -45,7 +44,6 @@ const drawCandleChart = (quotes) => {
     .enter()
     .append('g');
 
-
   y = d3.scaleLinear()
     .domain([(_.minBy(quotes, "Low").Low),
       (_.maxBy(quotes, "High").High)])
@@ -53,7 +51,7 @@ const drawCandleChart = (quotes) => {
 
   yAxis = d3.axisLeft(y).tickSize(-width);
 
-  x = d3.scaleBand()
+  xBand = d3.scaleBand()
     .range([0, width])
     .domain(_.times(quotes.length))
     .padding(0.3);
@@ -111,3 +109,7 @@ const main = () => {
 };
 
 window.onload = main;
+
+
+//https://bl.ocks.org/davidylam/cbe610a5d68aefa1bda1224588ec35ab
+//http://bl.ocks.org/cdagli/728e1f4509671b7de16d5f7f6bfee6f0

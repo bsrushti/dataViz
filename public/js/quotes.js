@@ -276,7 +276,7 @@ const drawStatisticsTable = (transactions) => {
 };
 
 const main = () => {
-  d3.csv('data/nifty50.csv', q => {
+  d3.csv('data/SBIN-NS.csv', q => {
     return {
       ...q,
       Close: +q.Close,
